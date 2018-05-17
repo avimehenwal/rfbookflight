@@ -1,0 +1,32 @@
+# Problem statement
+Avi Mehenwal avi.mehenwal@gmai.com
+
+A selenium script to make a booking on goibibo from _Bangalore_ to _Mumbai_ with following parameters.
+
+* Travel date : tomorrow
+* Return Date : tomorrow + 2
+* Select the earliest flights on both days
+* Asserts
+** Proceed to pay
+** Total amount
+
+---
+
+### Solution Requirnments
+
+* Python 3.6 or above
+* http://robotframework.org/[Robot Framework] selenium layer for browser automation.
+* Docker images for chrome and firefox
+* chromedrive and geckodriver (if not using docker)
+
+### Steps to run the project
+1. Activate python virtual environment
+2. Navigate to project directory
+3. Run `robot goibibo_test.robot`
+4. Open `results.html` or `log.html` files  generated in the current directory to view test report
+
+
+#### Challenges
+* xpaths to move up/down in hierarchy
+* css selectors for targetted selection, Eg: datepicker columns
+* Clicking before scrolling to element

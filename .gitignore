@@ -3,6 +3,12 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Robot Framework specific
+*.png
+*.html
+*.xml
+*.log
+
 # C extensions
 *.so
 
