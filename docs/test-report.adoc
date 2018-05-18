@@ -24,7 +24,7 @@ Avi Mehenwal avi.mehenwal@gmai.com
 | 4 console error were observed with 1 being *Syntax Error*
 |===
 
-image::media/springboard-homepage-consoleerrors.png[link="images/springboard-homepage-consoleerrors.png"]
+image::media/springboard-homepage-consoleerrors.png[link="media/springboard-homepage-consoleerrors.png"]
 
 ---
 
@@ -52,4 +52,4 @@ image::media/springboard-homepage-consoleerrors.png[link="images/springboard-hom
 | same message appears on screen despite entering the same email ID multiple times. This may make some users believe they were NOT registered previously but now they are.
 |===
 
-video::media/springboard_bug_email_repeatable-2018-05-18_18.22.16.mp4[]
+video::media/springboard_bug_email_repeatable-2018-05-18_18.22.16.mp4[video]
