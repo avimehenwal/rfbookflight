@@ -5,7 +5,8 @@ __pycache__/
 
 # Robot Framework specific
 *.png
-*.html
+log.html
+report.html
 *.xml
 *.log
 tags
