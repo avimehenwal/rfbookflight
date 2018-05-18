@@ -1,0 +1,27 @@
+# Test Report
+Avi Mehenwal avi.mehenwal@gmai.com
+
+### [Homepage] 4 console error reported
+|===
+| priority | low
+| severity | low
+| browser | chrome: 66.0.3359.139
+| Environment | Linux: 4.16.8-1-ARCH
+
+|===
+
+#### Steps To Reproduce
+
+. Open https://www.springboard.com/ in chrome browser
+. Open chrome developer tools (CTRL+SHIFT+I or right click then Inspect)
+. Click on *Console* tab and observe console errors
+
+
+#### Expected
+Browser should not throw any console error. Unless 3rd party and low impact
+
+#### Actual
+4 console error were observed with 1 being *Syntax Error*
+
+image::images/springboard-homepage-consoleerrors.png[link="images/springboard-homepage-consoleerrors.png"]
+

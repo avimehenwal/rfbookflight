@@ -43,7 +43,7 @@ ${proceed_to_pay_loc}     css=input[value="BOOK"]
 
 
 *** Test Cases ***
-Test making a sample booking from Bangalore to Mumbai - goibibo
+Test a sample booking from Bangalore to Mumbai - goibibo
     [Documentation]     Assert price and payment button after fligh destination and time selection.
     ...     Open goibibo homepage
     ...     Enter source:Bangalore and destination:Mumbai in input boxes
