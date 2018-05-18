@@ -30,3 +30,9 @@ A selenium script to make a booking on goibibo from _Bangalore_ to _Mumbai_ with
 * xpaths to move up/down in hierarchy
 * css selectors for targetted selection, Eg: datepicker columns
 * Clicking before scrolling to element
+* Site behaves differenctly in chrome and firefox browsers. Search results page varies
+* In chrome elements move but in firefox they are clicable anf fixed
+* Overlapping items, datepicker values under ad-banner]
+
+### Open Issues
+* Datepicker works by position and not by value

@@ -8,6 +8,7 @@ __pycache__/
 *.html
 *.xml
 *.log
+tags
 
 # C extensions
 *.so

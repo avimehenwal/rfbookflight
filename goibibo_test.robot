@@ -5,14 +5,15 @@ Library             Collections
 Library             BuiltIn
 #Test Setup         Reload Page
 #Test Setup         Open Browser     ${SEARCH_URL}     ${BROWSER}
-Suite Setup         Open Browser     ${HP_URL}         ${BROWSER}
+Suite Setup         Goto Website
 Suite Teardown      Close All Browsers
 
 
 *** Variables ***
 # Test runner variables
+${Selenium.RemoteUrl}     http://localhost:4444/wd/hub
 ${HP_URL}                 https://www.goibibo.com/
-${SEARCH_URL}             https://www.goibibo.com/flights/air-BLR-BOM-20180517-20180519-1-0-0-E-D/
+${SEARCH_URL}             https://www.goibibo.com/flights/air-BLR-BOM-20180519-20180522-1-0-0-E-D/
 ${BROWSER}                chrome
 ${TIMEOUT}                10
 
@@ -24,8 +25,8 @@ ${depart_return_loc}      css=input.form-control[placeholder="Choose Date"]
 ${from_val}               Bangalore (BLR)
 ${to_val}                 Mumbai (BOM)
 ${day_picker}             css=div.DayPicker
-${tomorrow_loc}           ${day_picker} .DayPicker-Day--selected+div
-${return_loc}             ${day_picker} .DayPicker-Day--today+div+div
+${tomorrow_loc}           ${day_picker} #fare_20180519
+${return_loc}             ${day_picker} #fare_20180522
 ${search_loc}             css=#gi_search_btn
 
 # Search-results page variables
@@ -52,39 +53,51 @@ Test making a sample booking from Bangalore to Mumbai - goibibo
     ...     Identify earliest return flight time and select
     ...     Click "Book" Button
     ...     From conformation page assert "Total Price" and "Proceed to Payment"
-
-    Select City     ${from_loc}      ${from_val}
-    Select City     ${to_loc}        ${to_val}
-
-    : FOR       ${picker_position}    IN RANGE   0   1
-    \   Log    ${picker_position}
-    \  Select Date From Datepicker         ${tomorrow_loc}      ${picker_position}
-    \  Select Date From Datepicker         ${return_loc}        ${picker_position}
-
+    #[Setup]             Goto Website
+    Select City         ${from_loc}   ${from_val}
+    Select City         ${to_loc}     ${to_val}
+    Select Date From Datepicker       ${tomorrow_loc}      ${0}
+    Select Date From Datepicker       ${return_loc}        ${1}
     Click Element       ${search_loc}
-
-    Get The Earliest Time         ${s_from_dep_loc}
-    Get The Earliest Time         ${s_to_dep_loc}
-    Click Element                 ${proceed_to_pay_loc}
-    Wait Until Page Contains      Proceed to Payment
-
+    Get The Earliest Time New         ${s_from_dep_loc}
+    Get The Earliest Time New         ${s_to_dep_loc}
+    Click Element                     ${proceed_to_pay_loc}
+    Wait Until Page Contains          Proceed to Payment
     # Assertions
-    Page Should Contain           Proceed to Payment
-    Element Should Be Visible     ${total_price_loc}        total price not visible
+    Page Should Contain               Proceed to Payment
+    Element Should Be Visible         ${total_price_loc}        total price not visible
 
+Dummy Test Case
+    [Tags]      test
+    [Setup]     Open Browser     ${SEARCH_URL}     ${BROWSER}       remote_url=${Selenium.RemoteUrl}
+    Get The Earliest Time New     ${s_from_dep_loc}
+    Get The Earliest Time New     ${s_to_dep_loc}
 
 *** Keywords ***
+Scroll Element To Top
+    [Arguments]       ${locator}        ${padding_from_top}=250
+    [Documentation]   Scroll screen to until locator is on top
+    ...               Overcomes item not clickable / overlapping element issues
+    ...               250 padding required on search-result page
+    ${y}=    Get Vertical Position     ${locator}
+    ${yi}=    Evaluate        ${y}-${padding_from_top}
+    Log     ${yi}
+    Execute Javascript        window.scrollTo(0, ${yi});
+
 Select Date From Datepicker
     [Arguments]       ${date_locator}           ${index}
     [Documentation]   Find and selects the date provides by locater on datepicker widget
     @{depart_return_datepicker_list} =   Get WebElements   ${depart_return_loc}
     Convert To Integer      ${index}
     Click Element   @{depart_return_datepicker_list}[${index}]
-    Wait Until Element Is Visible      ${day_picker}     ${TIMEOUT}
-    Page Should Contain Element        ${day_picker}
-    Element Should Contain     ${day_picker}     May 2018
-    Click Element           ${date_locator}
+    Wait Until Element Is Visible      ${date_locator}     ${TIMEOUT}
+    Page Should Contain Element        ${date_locator}
+    Element Should Contain             ${day_picker}       2018
+    Scroll Element To Top              ${date_locator}
+    #Wait Until Keyword Succeeds    3    2 sec     Click Element     ${date_locator}
+    Click Element     ${date_locator}
     Wait Until Page Does Not Contain Element        ${day_picker}     ${TIMEOUT}
+    Execute Javascript        window.scrollTo(0, 0);
 
 Select City
     [Arguments]       ${locator}        ${value}
@@ -94,34 +107,43 @@ Select City
     Wait Until Page Contains        ${value}
     Click Element                   ${header_loc}
 
+Goto Website
+    #Open Browser     ${HP_URL}   ${BROWSER}
+    #Open Browser     ${SEARCH_URL}     ${BROWSER}
+    Open Browser     ${HP_URL}   ${BROWSER}   remote_url=${Selenium.RemoteUrl}
+    Maximize Browser Window
 
-Get The Earliest Time
+Get The Earliest Time New
     [Arguments]       ${locator}
     [Documentation]   Extract all depart-times from DOM
     ...               sort them, fetch the smallest one
-    ...               and then select the containg tile
-    ${xpath}=    Set Variable          ${locator}
-    ${count}=    Get Matching Xpath Count    ${xpath}
-    ${time}=     Create List
+    ...               and then select the containing tile
+    Log     ${locator}
     Wait Until Page Contains      Bangalore to Mumbai       ${TIMEOUT}
-    :FOR    ${i}    IN RANGE    1      ${count} + 1
-    \    ${name}=    Get Text    xpath=(${xpath})[${i}]
+    Wait Until Page Contains Element     ${locator}
+    @{elements}=     Get WebElements     ${locator}
+    Log Many    @{elements}
+    ${count}=        Get Length     ${elements}
+    Log     ${count}
+    ${time}=     Create List
+    :FOR    ${element}    IN   @{elements}
+    \    Log    ${element}
+    \    ${name}=    Get Text     ${element}
     \    Append To List    ${time}     ${name}
     Log             ${time}
     Sort List       ${time}
+    Log             ${time}
     ${first}=       Get From List      ${time}     0
+    Log     ${first}
     ${first_loc}=   Set Variable       ${locator}[text()="${first}"]
+    Log     ${first_loc}
     ${sel_first_loc}=       Set Variable      ${first_loc}${s_sel_loc}
     Log             ${sel_first_loc}
     Wait Until Element Is Enabled      ${sel_first_loc}       ${TIMEOUT}       not enabled
     Set Focus To Element               ${sel_first_loc}
-
-    ${y}=    Get Vertical Position     ${sel_first_loc}
-    ${yi}=    Evaluate        ${y}-250
-    Log     ${yi}
-    Execute Javascript        window.scrollTo(0, ${yi});
-    Wait Until Element Is Visible       ${sel_first_loc}       ${TIMEOUT}
+    Scroll Element To Top              ${sel_first_loc}
+    Wait Until Element Is Visible      ${sel_first_loc}       ${TIMEOUT}
     # Todo - WebDriverException: Message: unknown error: Element is not clickable at point
     #Click Element           ${sel_first_loc}
-    Execute Javascript   var j = document.evaluate ('${sel_first_loc}', document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null); j.click;
+    Execute Javascript   var j=document.evaluate ('${sel_first_loc}', document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null); j.click;
     Execute Javascript        window.scrollTo(0, 0);
