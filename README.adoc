@@ -1,7 +1,7 @@
 # Problem statement
 Avi Mehenwal avi.mehenwal@gmai.com
 
-A selenium script to make a booking on goibibo from _Bangalore_ to _Mumbai_ with following parameters.
+A automation script to make a booking on goibibo from _Bangalore_ to _Mumbai_.
 
 * Travel date : tomorrow
 * Return Date : tomorrow + 2
@@ -12,27 +12,60 @@ A selenium script to make a booking on goibibo from _Bangalore_ to _Mumbai_ with
 
 ---
 
-### Solution Requirnments
+### Requirnments
 
 * Python 3.6 or above
+----
+python -V
+----
 * http://robotframework.org/[Robot Framework] selenium layer for browser automation.
 * Docker images for chrome and firefox
+.Docker commands
+----
+# fetch docker image
+docker pull selenium/standalone-chrome-debug
+
+# Run docker image and expose ports
+docker run -d -p 4444:4444 -p 5900:5900 -v /dev/shm:/dev/shm selenium/standalone-chrome-debug:3.12.0-americium
+
+# Connect via vnc (if debug required)
+vncviewer localhost:5900
+----
 * chromedrive and geckodriver (if not using docker)
 
 ### Steps to run the project
-1. Activate python virtual environment
-2. Navigate to project directory
-3. Run `robot goibibo_test.robot`
-4. Open `results.html` or `log.html` files  generated in the current directory to view test report
+Setup python virtual environment
+----
+python3 -m venv ENV-NAME
+source path/to/virtualenv/bin/activate
+pip install robotframework
+pip install robotframework-seleniumlibrary
+----
+Navigate to project directory
+----
+cd path/to/projectdir
+----
+Run `robot goibibo_test.robot`
+----
+robot src/goibibo_test.robot
+----
+Open `results.html` or `log.html` files  generated in the current directory to view test report
 
 
 #### Challenges
 * xpaths to move up/down in hierarchy
 * css selectors for targetted selection, Eg: datepicker columns
-* Clicking before scrolling to element
+* Clicking elements not in visible view
 * Site behaves differenctly in chrome and firefox browsers. Search results page varies
-* In chrome elements move but in firefox they are clicable anf fixed
+* In chrome elements move but in firefox they are clickable and fixed
 * Overlapping items, datepicker values under ad-banner]
 
+
 ### Open Issues
-* Datepicker works by position and not by value
+* Pass dynamic values to datepicker
+* Figure out why css selector is not working when xpath is!
+
+
+#### Changelog
+* datepicker selection based on text field and not by position
+* Modularize
