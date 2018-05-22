@@ -12,13 +12,30 @@ A automation script to make a booking on goibibo from _Bangalore_ to _Mumbai_.
 
 ---
 
+### How to view this project
+1. All aumomated test scripts and reports are inside `src` directory
+2. All manual test-reports, screenshots and demos are inside `docs` dir
+3. Instructions on how to run locally are inside `README`. Use browser https://chrome.google.com/webstore/detail/asciidoctorjs-live-previe/iaalpfgpbocpdfblpnhhgllgbdbchmia?hl=en[Asciidoctor chrome plugin] to open README file for rich formatted text view
+
+
 ### Requirnments
 
 * Python 3.6 or above
 ----
 python -V
+
+# setting up virtual environment
+python3 -m venv springboard
+
+# activating python virtual environment
+source springboard/bin/activate
 ----
 * http://robotframework.org/[Robot Framework] selenium layer for browser automation.
+----
+# installing robotframework and selenium bindings
+pip install robotframework
+pip install --upgrade robotframework-seleniumlibrary
+----
 * Docker images for chrome and firefox
 .Docker commands
 ----
@@ -33,6 +50,7 @@ vncviewer localhost:5900
 ----
 * chromedrive and geckodriver (if not using docker)
 
+
 ### Steps to run the project
 Setup python virtual environment
 ----
@@ -45,6 +63,8 @@ Navigate to project directory
 ----
 cd path/to/projectdir
 ----
+Make sure `selenium/standalone-chrome-debug` docker container is up and running and you are connected via VNC.
+
 Run `robot goibibo_test.robot`
 ----
 robot src/goibibo_test.robot
@@ -62,10 +82,13 @@ Open `results.html` or `log.html` files  generated in the current directory to v
 
 
 ### Open Issues
-* Pass dynamic values to datepicker
 * Figure out why css selector is not working when xpath is!
 
+### Manual test report at
+link:docs/index.html[Link to Manual test-report]
 
 #### Changelog
 * datepicker selection based on text field and not by position
 * Modularize
+
+# END
